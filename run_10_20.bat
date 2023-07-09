@@ -1,0 +1,1 @@
+py.exe .\main.py 10 20
