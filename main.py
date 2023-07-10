@@ -6,7 +6,7 @@ from os.path import isfile, join
 
 import re
 
-TOTAL_COUNT_EX_STR = "inventory count item = 0"
+#TOTAL_COUNT_EX_STR = "inventory count item = 0"
 ERROR_STR = "error"
 
 def get_id_price(string: str):
@@ -18,9 +18,9 @@ def get_id_price(string: str):
         price_value = float(price_match.group(1))
         return id_value, price_value
 
-    elif id_match and not price_match:
-        id_value_except = id_match.group(1)
-        return f"{id_value_except} inventory count item", '0'
+    # elif id_match and not price_match:
+    #     id_value_except = id_match.group(1)
+    #     return id_value_except, '-1'
 
     else:
         print("None")
@@ -48,20 +48,12 @@ def write_file(profiles: list[str], file_name: str):
 
 # Define a function to extract and convert the price value
 def get_price(string):
-    try:
-        price = re.findall(r'\$([\d.]+)', string)[0]
-        return float(price)
-    except:
-        # For case when `inventory count item = 0` in logger.txt
-        return float(0)
+    price = re.findall(r'\$([\d.]+)', string)[0]
+    return float(price)
 
 def sort_profiles(profiles: list[str]):
     # Sort the list of strings based on price in ascending order
     sorted_strings = sorted(profiles, key=get_price, reverse=True)
-
-    # Print the sorted strings
-    # for sorted_string in sorted_strings:
-    #     print(sorted_string)
 
     return sorted_strings
 
@@ -71,13 +63,9 @@ def analyze(profiles: list[str]):
     for profile in profiles:
         # Extract the inventory price from the profile
         is_price: bool = len(profile.split("$")) >=2
-        is_special_ex_str: bool = TOTAL_COUNT_EX_STR in profile
 
-        if is_price or is_special_ex_str:
-
-            if is_special_ex_str:
-                filtered_profiles.append(profile)
-                continue
+        #if is_price or is_special_ex_str:
+        if is_price:
 
             inventory_price = float(profile.strip().split("$")[1])
 
